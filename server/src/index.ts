@@ -34,7 +34,7 @@ const io = new SocketIOServer(server, {
 
 const prisma = new PrismaClient();
 const notificationService = new NotificationService(prisma);
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3010;
 // Deriv WebSocket connections require a NUMERIC registered app_id.
 // DERIV_CLIENT_ID is the OAuth 2.0 client identifier (alphanumeric) and must never be
 // passed to the socket endpoint - doing so is rejected with HTTP 401.
