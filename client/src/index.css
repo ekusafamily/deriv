@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#080d1a] text-slate-100;
+  }
+}
+
+/* Custom Scrollbar for sleek trading terminal feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 4px 20px -2px rgba(245, 158, 11, 0.1);
+}
+
+/* Pulse animation for active trades */
+@keyframes trade-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-trade-pulse {
+  animation: trade-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Hide Blockly's internal duplicate category tree toolbox */
+.blocklyToolboxDiv {
+  display: none !important;
+}
+
+/* Ensure Blockly SVG injection scales properly without forcing parent container expansion */
+.blocklySvg {
+  background-color: transparent !important;
+}
+
+.injectionDiv {
+  overflow: hidden !important;
+  position: relative !important;
+  touch-action: none;
+}
+
+/* Deriv Root Block Header font styling matching DDBOt */
+.blocklyText.blocklyTextRootBlockHeader {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  fill: #ffffff !important;
+}
+
+/* Simple, clean Deriv block selection and outline styling */
+.blocklySelected > .blocklyPath {
+  stroke: #ff444f !important;
+  stroke-width: 2px !important;
+}
+
+.blocklyPath {
+  stroke-width: 1px;
+}
+
+/* Dragging Block Simple Elevation */
+.blocklyDragging > .blocklyPath {
+  opacity: 0.9 !important;
+}
+
+/* Subtle Error indicator */
+.block--error-highlighted > .blocklyPath {
+  stroke: #ff444f !important;
+  stroke-width: 2px !important;
+}
+
+/* DDBOt Custom Block Text and Field styling */
+.blocklyText {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+  font-size: 11px !important;
+  fill: #f1f5f9 !important;
+}
+
+.blocklyEditableText > rect {
+  fill: #0f172a !important;
+  fill-opacity: 0.85 !important;
+  stroke: #334155 !important;
+  stroke-width: 1px !important;
+  rx: 4px !important;
+}
+
+.blocklyEditableText:hover > rect {
+  stroke: #f59e0b !important;
+}
+
+.blocklyDropDownDiv {
+  background-color: #0d1426 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7) !important;
+  color: #f8fafc !important;
+}
+

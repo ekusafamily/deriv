@@ -1,0 +1,112 @@
+# ============================================================
+# DBOT – Deriv 3rd Party App  |  .gitignore
+# ============================================================
+
+# ── Environment & Secrets ───────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+
+# ── Node ────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+.yarn/
+
+# ── Build Outputs ───────────────────────────────────────────
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.vite/
+
+# ── TypeScript ──────────────────────────────────────────────
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# ── Vite ────────────────────────────────────────────────────
+vite.config.*.timestamp-*
+
+# ── Prisma ──────────────────────────────────────────────────
+# Keep schema.prisma and migrations; ignore runtime DB files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+prisma/dev.db
+prisma/prod.db
+prisma/*.db
+
+# ── Logs ────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# ── OS & Editor ─────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# ── IDEs ────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── AI Agent Configs (local tooling, not part of the app) ──
+.openclaude/
+.agent/
+.agents/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.kiro/
+.codebuddy/
+.continue/
+.opencode/
+.roo/
+.trae/
+.windsurf/
+.qoder/
+
+# ── Testing ─────────────────────────────────────────────────
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# ── Misc ────────────────────────────────────────────────────
+*.zip
+*.rar
+*.tar.gz
+*.tgz
+.cache/
+tmp/
+temp/

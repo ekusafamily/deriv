@@ -1,0 +1,170 @@
+[Options Setup](/docs/options/)
+
+# Reset Demo Account Balance
+
+Post Auth required
+
+Reset balance for Options trading demo account
+
+## Endpoint
+
+Post `/trading/v1/options/accounts/{account_id}/reset-demo-balance`
+
+Base URL: `https://api.derivws.com`
+
+## Request Schema
+
+#### `headers` — Required `object`
+
+**Object Properties:**
+
+  ##### `Deriv-App-ID` — Required `string`
+
+  Application identifier. Required for Personal Access Token (PAT) authentication; not required for OAuth Bearer tokens.
+
+  ##### `Authorization` — Required `string`
+
+  Bearer token for authentication
+
+#### `path` — Required `object`
+
+**Object Properties:**
+
+  ##### `account_id` — Required `string`
+
+  Options trading account ID
+
+## Response Schema
+
+No properties defined.
+## Examples
+
+### Request Example
+
+```json
+POST /trading/v1/options/accounts/DOT90004580/reset-demo-balance
+Headers:
+  Deriv-App-ID: YOUR_APP_ID   # Required for PAT authentication only
+  Authorization: Bearer YOUR_AUTH_TOKEN
+
+Path Parameters:
+  - account_id: string (Options trading demo account ID)
+```
+
+### Response Example
+
+```json
+(No response body — HTTP 200 alone confirms the balance was reset)
+```
+
+## Status Codes
+
+200 OK - Demo balance successfully reset to default amount. Response has no body.
+
+400 Bad request - Invalid account ID or not a demo account
+
+401 Unauthorized - Invalid or missing authentication
+
+403 Forbidden - Access denied
+
+404 Not found - Account not found
+
+500 Internal server error
+
+504 Gateway timeout - Upstream service timeout
+
+## Error Responses
+
+400 Bad request
+
+```
+{
+  "errors": [
+    {
+      "status": 400,
+      "code": "ValidationError",
+      "message": "Only demo accounts can have their balance reset"
+    }
+  ],
+  "meta": {
+    "endpoint": "/accounts/DOT90004580/reset-demo-balance",
+    "method": "POST",
+    "timing": 34
+  }
+}
+```
+
+401 Unauthorized
+
+```
+{
+  "errors": [
+    {
+      "status": 401,
+      "code": "Unauthorized",
+      "message": "Invalid or missing authentication credentials"
+    }
+  ],
+  "meta": {
+    "endpoint": "/accounts/DOT90004580/reset-demo-balance",
+    "method": "POST",
+    "timing": 12
+  }
+}
+```
+
+403 Forbidden
+
+```
+{
+  "errors": [
+    {
+      "status": 403,
+      "code": "AccessDenied",
+      "message": "You do not have permission to access this resource"
+    }
+  ],
+  "meta": {
+    "endpoint": "/accounts/DOT90004580/reset-demo-balance",
+    "method": "POST",
+    "timing": 15
+  }
+}
+```
+
+500 Internal server error
+
+```
+{
+  "errors": [
+    {
+      "status": 500,
+      "code": "InternalServerError",
+      "message": "An internal error occurred"
+    }
+  ],
+  "meta": {
+    "endpoint": "/accounts/DOT90004580/reset-demo-balance",
+    "method": "POST",
+    "timing": 67
+  }
+}
+```
+
+##### Authentication Required
+
+This endpoint requires an `Authorization: Bearer` token. When authenticating with a Personal Access Token (PAT), the `Deriv-App-ID` header is required to identify your application ([Authentication](/docs/intro/authentication/)
+
+). OAuth2 Scope: `trade`
+
+## About Reset Demo Account Balance
+
+The `POST /trading/v1/options/accounts/{account_id}/reset-demo-balance` endpoint: Reset balance for Options trading demo account
+
+### Demo Accounts Only
+
+This endpoint only works for demo accounts. Real accounts cannot have their balance reset via API.
+
+### Default Balance
+
+The balance is reset to the default amount of $10,000 USD for demo accounts.

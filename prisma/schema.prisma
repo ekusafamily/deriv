@@ -1,0 +1,157 @@
+// DBOT Database Schema (Prisma ORM)
+// Supabase / PostgreSQL & Local SQLite compatible
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Can be switched to "postgresql" for Supabase/Render via env
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(uuid())
+  email          String?        @unique
+  name           String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  accounts       DerivAccount[]
+  bots           Bot[]
+  auditEvents    AuditEvent[]
+  notifications  Notification[]
+}
+
+model DerivAccount {
+  id             String         @id @default(uuid())
+  userId         String?
+  user           User?          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId      String         @unique // e.g. CR123456 or VRTC123456
+  currency       String         @default("USD")
+  isVirtual      Boolean        @default(true) // Demo vs Real Money
+  token          String         // Token or encrypted token
+  balance        Float          @default(0.0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  sessions       ExecutionSession[]
+}
+
+model Bot {
+  id             String             @id @default(uuid())
+  userId         String?
+  user           User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  description    String?
+  symbol         String             @default("R_100")
+  contractType   String             @default("CALL")
+  isActive       Boolean            @default(false)
+  workspaceXml   String?            // Blockly visual workspace XML
+  strategyAst    String             // JSON string of StrategyAST
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  versions       BotVersion[]
+  sessions       ExecutionSession[]
+}
+
+model BotVersion {
+  id             String         @id @default(uuid())
+  botId          String
+  bot            Bot            @relation(fields: [botId], references: [id], onDelete: Cascade)
+  versionNumber  Int
+  workspaceXml   String?
+  strategyAst    String
+  changeNotes    String?
+  createdAt      DateTime       @default(now())
+}
+
+model ExecutionSession {
+  id             String         @id @default(uuid())
+  botId          String
+  bot            Bot            @relation(fields: [botId], references: [id], onDelete: Cascade)
+  accountId      String?
+  account        DerivAccount?  @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  runMode        String         @default("PAPER") // "LIVE_REAL", "LIVE_DEMO", "PAPER"
+  status         String         @default("RUNNING") // "RUNNING", "PAUSED", "STOPPED", "ERROR"
+  initialBalance Float          @default(0.0)
+  currentBalance Float          @default(0.0)
+  totalProfit    Float          @default(0.0)
+  totalTrades    Int            @default(0)
+  winningTrades  Int            @default(0)
+  losingTrades   Int            @default(0)
+  startedAt      DateTime       @default(now())
+  stoppedAt      DateTime?
+  trades         Trade[]
+}
+
+model Trade {
+  id             String            @id @default(uuid())
+  sessionId      String
+  session        ExecutionSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  contractId     Int?              // Deriv contract_id
+  proposalId     String?
+  symbol         String
+  contractType   String
+  stake          Float
+  payout         Float             @default(0.0)
+  profit         Float             @default(0.0)
+  status         String            // "OPEN", "WON", "LOST", "CANCELLED"
+  entrySpot      Float?
+  exitSpot       Float?
+  barrier        String?
+  entryTime      DateTime          @default(now())
+  exitTime       DateTime?
+  isPaperTrade   Boolean           @default(false)
+}
+
+model RiskSetting {
+  id                    String   @id @default(uuid())
+  userId                String?
+  maxStake              Float    @default(50.0)
+  maxDailyLoss          Float    @default(100.0)
+  takeProfitTarget      Float    @default(100.0)
+  maxConsecutiveLosses  Int      @default(5)
+  cooldownSeconds       Int      @default(5)
+  maxDrawdownPercent    Float    @default(20.0)
+  emergencyStopEnabled  Boolean  @default(true)
+  updatedAt             DateTime @updatedAt
+}
+
+model Notification {
+  id             String   @id @default(uuid())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           String   // "INFO", "TRADE_WON", "TRADE_LOST", "RISK_ALERT", "AUTH", "ERROR"
+  title          String
+  message        String
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action         String   // "CONNECT_ACCOUNT", "START_REAL_BOT", "EMERGENCY_STOP", "TOKEN_SAVED"
+  details        String?
+  ipAddress      String?
+  createdAt      DateTime @default(now())
+}
+
+model BacktestJob {
+  id             String   @id @default(uuid())
+  symbol         String
+  contractType   String
+  strategyAst    String
+  timeframe      String   @default("1m")
+  startDate      DateTime
+  endDate        DateTime
+  initialBalance Float    @default(1000.0)
+  finalBalance   Float?
+  totalProfit    Float?
+  winRate        Float?
+  maxDrawdown    Float?
+  totalTrades    Int?
+  tradesJson     String?  // Serialized simulated trade list
+  status         String   @default("COMPLETED")
+  createdAt      DateTime @default(now())
+}
